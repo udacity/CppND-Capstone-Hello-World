@@ -1,4 +1,4 @@
-# CPPND: Capstone Hello World Repo
+# CPPND: Capstone WeBCrawler Repo
 
 This is a starter repo for the Capstone project in the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213).
 
