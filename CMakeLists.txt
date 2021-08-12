@@ -9,6 +9,7 @@ find_package(CURL REQUIRED)
 
 
 set(CXX_FLAGS "-Wall")
+#set(CMAKE_CXX_FLAGS, "${CXX_FLAGS} -pthread -lcurl")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS} -pthread")
 
 # Find all executables
