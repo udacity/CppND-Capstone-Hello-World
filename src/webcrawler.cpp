@@ -23,6 +23,8 @@ int webCrawler::make_request(std::unique_ptr<URL> destination) {
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
  
         curl_easy_perform(curl);
+
+        curl_easy_cleanup(curl);
     }
     return 1;
 
