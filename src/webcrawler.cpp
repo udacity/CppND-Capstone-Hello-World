@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 
 #include <iostream>
+#include <regex>
 #include <string>
 
 #include "url.h"
@@ -92,12 +93,23 @@ CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
 }
 
 // TODO: Find URLs in this buf
-std::unique_ptr<URL> 
-webCrawler::findURLs_in_buf(char *received_buf, unique_ptr<URL> parent_url) {
+std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
+                                                 unique_ptr<URL> parent_url) {
+
+  string web_site = string(received_buf);
+
+  // Pattern to match
+  static const regex url_regex("<a href=\"(.*?)\">", regex_constants::icase);
+
   auto new_url = make_unique<URL>("https://www.google.com");
 
+  std::copy(
+      sregex_token_iterator(web_site.begin(), web_site.end(), url_regex, 1),
+      std::sregex_token_iterator(),
+      std::ostream_iterator<std::string>(std::cout, "\n"));
+
   new_url->set_root_address(parent_url->cur_url);
-  
+
   // TODO: Remove debug
   cout << "I am coming from " << new_url->get_root_address() << endl;
 
