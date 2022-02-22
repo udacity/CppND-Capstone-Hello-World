@@ -11,15 +11,13 @@
 using namespace std;
 
 int main() {
-    webCrawler crawl;
+  webCrawler crawl;
 
-    auto first_hop = make_unique<URL>("https://www.google.com");
+  auto first_hop = make_unique<URL>("https://www.google.com");
 
-    cout << "\nHello World!" << "\n";
+  // FIXME: This needs to be fixed
+  cout << first_hop->cur_url << "\n";
+  crawl.make_request(move(first_hop));
 
-    // FIXME: This needs to be fixed
-    cout << first_hop->get_root_address() << "\n";
-    crawl.make_request(move(first_hop));
-
-    return 0;
+  return 0;
 }
