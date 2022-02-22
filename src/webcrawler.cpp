@@ -99,7 +99,7 @@ std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
   string web_site = string(received_buf);
 
   // Pattern to match
-  static const regex url_regex("<a href=\"(.*?)\">", regex_constants::icase);
+  static const regex url_regex(R"!!(<\s*A\s+[^>]*href\s*=\s*"([^"]*)")!!", std::regex::icase);
 
   auto new_url = make_unique<URL>("https://www.google.com");
 
