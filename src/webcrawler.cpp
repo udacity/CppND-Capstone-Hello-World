@@ -3,6 +3,7 @@
 #include <curl/curl.h>
 
 #include <iostream>
+#include <set>
 #include <regex>
 #include <string>
 
@@ -70,12 +71,12 @@ webCrawler::webCrawler() {
 
 CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
 
-  curl_easy_setopt(curl, CURLOPT_URL, destination->cur_url.c_str());
+  curl_easy_setopt(curl, CURLOPT_URL, destination->cur_address.c_str());
 
   CURLcode res = curl_easy_perform(curl);
 
   if (res == CURLE_OK) {
-    cout << "We received " << mem->size << "B of data" << endl;
+    cout << "We received " << mem->size << " B of data" << endl;
     curl_easy_cleanup(curl);
 
     // TODO: Find URLs in this buf
@@ -92,26 +93,40 @@ CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
   return res;
 }
 
+std::set<std::string> extract_hyperlinks( std::string html_file_name ) {
+    static const std::regex hl_regex( "<a href=\"(.*?)\">", std::regex_constants::icase  ) ;
+
+    //const std::string text = file_to_string(html_file_name) ;
+
+    return { std::sregex_token_iterator( html_file_name.begin(), html_file_name.end(), hl_regex, 1 ),
+             std::sregex_token_iterator{} } ;
+}
+
 // TODO: Find URLs in this buf
 std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
                                                  unique_ptr<URL> parent_url) {
 
   string web_site = string(received_buf);
+  const auto sub_urls = [] ( std::string str ) { return str.find( "/" ) == 1 ; }; 
 
   // Pattern to match
   static const regex url_regex(R"!!(<\s*A\s+[^>]*href\s*=\s*"([^"]*)")!!", std::regex::icase);
 
-  auto new_url = make_unique<URL>("https://www.google.com");
+  auto new_url = make_unique<URL>("");
 
   std::copy(
       sregex_token_iterator(web_site.begin(), web_site.end(), url_regex, 1),
       std::sregex_token_iterator(),
       std::ostream_iterator<std::string>(std::cout, "\n"));
 
-  new_url->set_root_address(parent_url->cur_url);
+   const auto hlinks = extract_hyperlinks(web_site);
+  
+  //TODO: Here you need to parse URLs and populate a queue??
+  new_url->set_root_address(parent_url->cur_address);
 
   // TODO: Remove debug
-  cout << "I am coming from " << new_url->get_root_address() << endl;
+  cout << "I am coming from " << new_url->get_root_address() <<
+            " - I am: " << new_url->cur_address << endl;
 
   return new_url;
 }
