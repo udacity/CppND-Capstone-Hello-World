@@ -5,10 +5,16 @@
 
 class URL {
 private:
-	const std::string _url;
+  std::string root_address;
+  // TODO: File to store urls
+
 public:
-	URL(std::string address) : _url(address) {}
-	std::string get_root_address() {return this->_url;}
+  std::string cur_address;
+  URL(std::string address) : cur_address(address){};
+
+  std::string get_root_address() { return root_address; }
+  void set_root_address(std::string address) {root_address = address;}
+  // int record_url();
 };
 
 #endif // URL_H
