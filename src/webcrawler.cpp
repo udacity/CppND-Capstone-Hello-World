@@ -51,7 +51,7 @@ webCrawler::webCrawler() {
     // FIXME: Pointer to member function
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, mem);
-    // curl_easy_setopt(curl, CURLOPT_PRIVATE, mem->buf);
+    curl_easy_setopt(curl, CURLOPT_PRIVATE, mem);
 
     /* For completeness */
     curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "");
