@@ -2,6 +2,7 @@
 #define WEBCRAWLER_H
 
 #include <curl/curl.h>
+#include <memory>
 
 #include <string>
 
@@ -16,7 +17,7 @@ class webCrawler {
 private:
   CURL *curl;
 
-  // TODO: Can I this as a shared_ptr?
+  // TODO: Can I have this as a shared_ptr?
   memory_t *mem;
 
 public:
@@ -27,10 +28,14 @@ public:
   CURLcode make_request(std::unique_ptr<URL> destination);
 
   /* Utility function to parse urls */
-  std::unique_ptr<URL>
-  findURLs_in_buf(char *received_buf, std::unique_ptr<URL> parent_url);
+  std::unique_ptr<URL> findURLs_in_buf(char *received_buf, std::unique_ptr<URL> parent_url);
 
-  // size_t write_data(void* ptr, size_t size, size_t nmemb, std::string* data);
+  size_t write_data(void *contents, size_t sz, size_t nmemb, void *ctx);
+
+  static void write_data_callback(void *ctx, void *contents, size_t sz, size_t nmemb, void *context) {
+		auto *object = (webCrawler *)ctx;
+		object->write_data(contents, sz, nmemb, context);
+	}
 
   // int make_request(std::unique_ptr<URL>);
 };

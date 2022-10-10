@@ -3,22 +3,25 @@
 #include <curl/curl.h>
 
 #include <iostream>
+#include <memory>
 #include <set>
 #include <regex>
 #include <string>
 
+//TODO: Will use curl_url as a next step
 #include "url.h"
 
 using namespace std;
 
-static size_t write_data(void *contents, size_t sz, size_t nmemb, void *ctx) {
+size_t webCrawler::write_data(void *contents, size_t sz, size_t nmemb, void *ctx) {
 
   // TODO: Remove debug statement
-  // std::cout << "In writer callback\n";
+  std::cout << "In writer callback\n";
 
   size_t realsize = sz * nmemb;
   memory_t *mem = (memory_t *)ctx;
   char *ptr = (char *)realloc(mem->buf, mem->size + realsize);
+  std::cout << "In writer callback2\n";
   if (!ptr) {
     /* out of memory */
     printf("not enough memory (realloc returned NULL)\n");
@@ -28,6 +31,7 @@ static size_t write_data(void *contents, size_t sz, size_t nmemb, void *ctx) {
   mem->buf = ptr;
   memcpy(&(mem->buf[mem->size]), contents, realsize);
   mem->size += realsize;
+  std::cout << "In writer callback: " << realsize << "\n";
   return realsize;
 }
 
@@ -49,7 +53,8 @@ webCrawler::webCrawler() {
     curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 
     // FIXME: Pointer to member function
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+    //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, webCrawler::write_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, webCrawler::write_data_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, mem);
     curl_easy_setopt(curl, CURLOPT_PRIVATE, mem);
 
@@ -93,42 +98,15 @@ CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
   return res;
 }
 
-std::set<std::string> extract_hyperlinks( std::string html_file_name ) {
-    static const std::regex hl_regex( "<a href=\"(.*?)\">", std::regex_constants::icase  ) ;
-
-    //const std::string text = file_to_string(html_file_name) ;
-
-    return { std::sregex_token_iterator( html_file_name.begin(), html_file_name.end(), hl_regex, 1 ),
-             std::sregex_token_iterator{} } ;
-}
 
 // TODO: Find URLs in this buf
 std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
                                                  unique_ptr<URL> parent_url) {
 
   string web_site = string(received_buf);
-  const auto sub_urls = [] ( std::string str ) { return str.find( "/" ) == 1 ; }; 
-
-  // Pattern to match
-  static const regex url_regex(R"!!(<\s*A\s+[^>]*href\s*=\s*"([^"]*)")!!", std::regex::icase);
-
-  auto new_url = make_unique<URL>("");
-
-  std::copy(
-      sregex_token_iterator(web_site.begin(), web_site.end(), url_regex, 1),
-      std::sregex_token_iterator(),
-      std::ostream_iterator<std::string>(std::cout, "\n"));
-
-   const auto hlinks = extract_hyperlinks(web_site);
   
-  //TODO: Here you need to parse URLs and populate a queue??
-  new_url->set_root_address(parent_url->cur_address);
-
-  // TODO: Remove debug
-  cout << "I am coming from " << new_url->get_root_address() <<
-            " - I am: " << new_url->cur_address << endl;
-
-  return new_url;
+  return parent_url;
+  //return new_url;
 }
 
 webCrawler::~webCrawler() {
