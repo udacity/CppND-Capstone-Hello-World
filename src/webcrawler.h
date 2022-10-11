@@ -2,7 +2,7 @@
 #define WEBCRAWLER_H
 
 #include <curl/curl.h>
-
+#include <memory>
 #include <string>
 
 #include "url.h"
