@@ -4,17 +4,17 @@
 
 #include <iostream>
 #include <memory>
-#include <set>
 #include <regex>
+#include <set>
 #include <string>
 
-//TODO: Will use curl_url as a next step
+// TODO: Will use curl_url as a next step
 #include "url.h"
 
 using namespace std;
 
-size_t webCrawler::write_data(void *contents, size_t sz, size_t nmemb, void *ctx) {
-
+size_t webCrawler::write_data(void *contents, size_t sz, size_t nmemb,
+                              void *ctx) {
   size_t realsize = sz * nmemb;
   memory_t *tmp_mem = (memory_t *)ctx;
   char *ptr = (char *)realloc(tmp_mem->buf, tmp_mem->size + realsize);
@@ -31,7 +31,6 @@ size_t webCrawler::write_data(void *contents, size_t sz, size_t nmemb, void *ctx
 }
 
 webCrawler::webCrawler() {
-
   curl_global_init(CURL_GLOBAL_DEFAULT);
 
   // curl handle
@@ -48,7 +47,8 @@ webCrawler::webCrawler() {
     curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 
     // FIXME: Pointer to member function
-    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, webCrawler::write_data_callback);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+                     webCrawler::write_data_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, mem);
     curl_easy_setopt(curl, CURLOPT_PRIVATE, mem);
 
@@ -69,7 +69,6 @@ webCrawler::webCrawler() {
 }
 
 CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
-
   curl_easy_setopt(curl, CURLOPT_URL, destination->cur_address.c_str());
 
   CURLcode res = curl_easy_perform(curl);
@@ -92,19 +91,16 @@ CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
   return res;
 }
 
-
 // TODO: Find URLs in this buf
 std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
                                                  unique_ptr<URL> parent_url) {
-
   string web_site = string(received_buf);
-  
+
   return parent_url;
-  //return new_url;
+  // return new_url;
 }
 
 webCrawler::~webCrawler() {
-
   // if (curl)
   curl_global_cleanup();
 }

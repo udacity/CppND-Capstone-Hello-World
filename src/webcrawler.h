@@ -2,8 +2,8 @@
 #define WEBCRAWLER_H
 
 #include <curl/curl.h>
-#include <memory>
 
+#include <memory>
 #include <string>
 
 #include "url.h"
@@ -14,13 +14,13 @@ typedef struct {
 } memory_t;
 
 class webCrawler {
-private:
+ private:
   CURL *curl;
 
   // TODO: Can I have this as a shared_ptr?
   memory_t *mem;
 
-public:
+ public:
   webCrawler();
   ~webCrawler();
 
@@ -39,8 +39,10 @@ public:
     object->write_data(ctx, sz, nmemb, context);
   }
 
-  int buf_size() { return mem->size; } // Utility function to check
-                                       // how many bytes are in the buffer
+  int buf_size() {
+    return mem->size;
+  }  // Utility function to check
+     // how many bytes are in the buffer
 };
 
-#endif // WEBCRAWLER_H
+#endif  // WEBCRAWLER_H
