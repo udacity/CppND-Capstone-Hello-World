@@ -23,20 +23,24 @@ private:
 public:
   webCrawler();
   ~webCrawler();
-  
+
   // TODO: High level function that makes the request and fetch the web-site
   CURLcode make_request(std::unique_ptr<URL> destination);
 
   /* Utility function to parse urls */
-  std::unique_ptr<URL> findURLs_in_buf(char *received_buf, std::unique_ptr<URL> parent_url);
+  std::unique_ptr<URL> findURLs_in_buf(char *received_buf,
+                                       std::unique_ptr<URL> parent_url);
 
   size_t write_data(void *contents, size_t sz, size_t nmemb, void *ctx);
 
-  static void write_data_callback(void *ctx, size_t sz, size_t nmemb, void *context) {
-		auto *object = (webCrawler *)ctx;
-		object->write_data(ctx, sz, nmemb, context);
-	}
+  static void write_data_callback(void *ctx, size_t sz, size_t nmemb,
+                                  void *context) {
+    auto *object = (webCrawler *)ctx;
+    object->write_data(ctx, sz, nmemb, context);
+  }
 
+  int buf_size() { return mem->size; } // Utility function to check
+                                       // how many bytes are in the buffer
 };
 
 #endif // WEBCRAWLER_H
