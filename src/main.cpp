@@ -15,9 +15,13 @@ int main() {
 
   auto first_hop = make_unique<URL>("https://www.reuters.com");
 
-  // FIXME: This needs to be fixed
+  // TODO: Clean the debug prints
   cout << first_hop->cur_address << "\n";
   crawl.make_request(move(first_hop));
+
+  // TODO: Clean the debug prints
+  cout << "Crawl object has " << crawl.buf_size() << "B buffered data"
+       << "\n";
 
   return 0;
 }

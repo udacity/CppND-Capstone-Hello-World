@@ -82,9 +82,6 @@ CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
 
     // TODO: write into file
 
-    // Buffer clean-up
-    free(mem->buf);
-    free(mem);
   } else
     cout << "Request Failed - CURLCode: " << curl_easy_strerror(res) << endl;
 
@@ -101,6 +98,11 @@ std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
 }
 
 webCrawler::~webCrawler() {
-  // if (curl)
-  curl_global_cleanup();
+  if (curl) {
+    // Buffer clean-up
+    free(mem->buf);
+    free(mem);
+
+    curl_global_cleanup();
+  }
 }
