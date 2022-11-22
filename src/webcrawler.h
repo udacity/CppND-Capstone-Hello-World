@@ -37,7 +37,6 @@ public:
 		object->write_data(ctx, sz, nmemb, context);
 	}
 
-  // int make_request(std::unique_ptr<URL>);
 };
 
 #endif // WEBCRAWLER_H
