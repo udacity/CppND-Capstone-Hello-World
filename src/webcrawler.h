@@ -35,6 +35,7 @@ class webCrawler {
 
   static void write_data_callback(void *ctx, size_t sz, size_t nmemb,
                                   void *context) {
+    // TODO: Verify that the object / ctx is correct conceptually.
     auto *object = (webCrawler *)ctx;
     object->write_data(ctx, sz, nmemb, context);
   }
