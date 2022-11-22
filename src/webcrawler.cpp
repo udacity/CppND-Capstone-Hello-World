@@ -15,23 +15,18 @@ using namespace std;
 
 size_t webCrawler::write_data(void *contents, size_t sz, size_t nmemb, void *ctx) {
 
-  // TODO: Remove debug statement
-  std::cout << "In writer callback\n";
-
   size_t realsize = sz * nmemb;
-  memory_t *mem = (memory_t *)ctx;
-  char *ptr = (char *)realloc(mem->buf, mem->size + realsize);
-  std::cout << "In writer callback2\n";
+  memory_t *tmp_mem = (memory_t *)ctx;
+  char *ptr = (char *)realloc(tmp_mem->buf, tmp_mem->size + realsize);
   if (!ptr) {
     /* out of memory */
     printf("not enough memory (realloc returned NULL)\n");
     return 0;
   }
 
-  mem->buf = ptr;
-  memcpy(&(mem->buf[mem->size]), contents, realsize);
-  mem->size += realsize;
-  std::cout << "In writer callback: " << realsize << "\n";
+  tmp_mem->buf = ptr;
+  memcpy(&(tmp_mem->buf[tmp_mem->size]), contents, realsize);
+  tmp_mem->size += realsize;
   return realsize;
 }
 

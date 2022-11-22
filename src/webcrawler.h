@@ -32,9 +32,9 @@ public:
 
   size_t write_data(void *contents, size_t sz, size_t nmemb, void *ctx);
 
-  static void write_data_callback(void *ctx, void *contents, size_t sz, size_t nmemb, void *context) {
+  static void write_data_callback(void *ctx, size_t sz, size_t nmemb, void *context) {
 		auto *object = (webCrawler *)ctx;
-		object->write_data(contents, sz, nmemb, context);
+		object->write_data(ctx, sz, nmemb, context);
 	}
 
   // int make_request(std::unique_ptr<URL>);
