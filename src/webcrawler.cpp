@@ -48,7 +48,6 @@ webCrawler::webCrawler() {
     curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 
     // FIXME: Pointer to member function
-    //curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, webCrawler::write_data);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, webCrawler::write_data_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, mem);
     curl_easy_setopt(curl, CURLOPT_PRIVATE, mem);
