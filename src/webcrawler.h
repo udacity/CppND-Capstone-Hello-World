@@ -40,10 +40,8 @@ class webCrawler {
     object->write_data(ctx, sz, nmemb, context);
   }
 
-  int buf_size() {
-    return mem->size;
-  }  // Utility function to check
-     // how many bytes are in the buffer
+  // Utility function to check how many bytes are in the buffer
+  int buf_size() { return mem->size; }
 };
 
 #endif  // WEBCRAWLER_H
