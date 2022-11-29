@@ -8,9 +8,6 @@
 #include <set>
 #include <string>
 
-// TODO: Will use curl_url as a next step
-#include "url.h"
-
 using namespace std;
 
 size_t webCrawler::write_data(void *contents, size_t sz, size_t nmemb,

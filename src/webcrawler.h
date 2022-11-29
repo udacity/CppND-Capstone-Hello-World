@@ -6,8 +6,6 @@
 #include <memory>
 #include <string>
 
-#include "url.h"
-
 typedef struct {
   char *buf;
   size_t size;
