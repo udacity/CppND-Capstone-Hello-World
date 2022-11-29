@@ -13,7 +13,9 @@ set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS} -pthread")
 
 # Find all executables
-file(GLOB project_SRCS src/*.cpp src/*.h)
+file(GLOB project_SRCS src/main.cpp
+						src/webcrawler.cpp
+						src/webcrawler.h)
 
 add_executable(WebCrawler ${project_SRCS})
 target_link_libraries(WebCrawler CURL::libcurl)
