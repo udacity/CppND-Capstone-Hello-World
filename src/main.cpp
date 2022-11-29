@@ -12,12 +12,13 @@ using namespace std;
 
 int main() {
   webCrawler crawl;
+  CURLU *first_url_handle = curl_url();
+  CURLUcode rc;
 
-  auto first_hop = make_unique<URL>("https://www.reuters.com");
+  rc = curl_url_set(first_url_handle, CURLUPART_URL, "https://www.reuters.com",
+                    0);
 
-  // TODO: Clean the debug prints
-  cout << first_hop->cur_address << "\n";
-  crawl.make_request(move(first_hop));
+  if (!rc) crawl.make_request(first_url_handle);
 
   // TODO: Clean the debug prints
   cout << "Crawl object has " << crawl.buf_size() << "B buffered data"

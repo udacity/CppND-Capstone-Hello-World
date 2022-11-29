@@ -46,7 +46,6 @@ webCrawler::webCrawler() {
     /* Important: use HTTP2 over HTTPS */
     curl_easy_setopt(curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2TLS);
 
-    // FIXME: Pointer to member function
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
                      webCrawler::write_data_callback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, mem);
@@ -68,33 +67,41 @@ webCrawler::webCrawler() {
   }
 }
 
-CURLcode webCrawler::make_request(unique_ptr<URL> destination) {
-  curl_easy_setopt(curl, CURLOPT_URL, destination->cur_address.c_str());
+CURLcode webCrawler::make_request(CURLU *destination_handle) {
+  char *url;
+  CURLUcode rc = curl_url_get(destination_handle, CURLUPART_URL, &url, 0);
+  CURLcode res;
 
-  CURLcode res = curl_easy_perform(curl);
+  if (!rc) {
+    curl_easy_setopt(curl, CURLOPT_URL, url);
 
-  if (res == CURLE_OK) {
-    cout << "We received " << mem->size << " B of data" << endl;
-    curl_easy_cleanup(curl);
+    res = curl_easy_perform(curl);
 
-    // TODO: Find URLs in this buf
-    findURLs_in_buf(mem->buf, move(destination));
+    if (res == CURLE_OK) {
+      cout << "We received " << mem->size << "B of data" << endl;
 
-    // TODO: write into file
+      curl_easy_cleanup(curl);
 
-  } else
-    cout << "Request Failed - CURLCode: " << curl_easy_strerror(res) << endl;
+      // TODO: Find URLs in this buf
+      findURLs_in_buf(mem->buf);
+
+      // TODO: write into file
+
+    } else
+      cout << "Request Failed - CURLCode: " << curl_easy_strerror(res) << endl;
+
+    curl_free(url);
+  }
 
   return res;
 }
 
 // TODO: Find URLs in this buf
-std::unique_ptr<URL> webCrawler::findURLs_in_buf(char *received_buf,
-                                                 unique_ptr<URL> parent_url) {
+int webCrawler::findURLs_in_buf(char *received_buf) {
+  int num_url = 0;
   string web_site = string(received_buf);
 
-  return parent_url;
-  // return new_url;
+  return num_url;
 }
 
 webCrawler::~webCrawler() {

@@ -25,11 +25,10 @@ class webCrawler {
   ~webCrawler();
 
   // TODO: High level function that makes the request and fetch the web-site
-  CURLcode make_request(std::unique_ptr<URL> destination);
+  CURLcode make_request(CURLU *destination);
 
   /* Utility function to parse urls */
-  std::unique_ptr<URL> findURLs_in_buf(char *received_buf,
-                                       std::unique_ptr<URL> parent_url);
+  int findURLs_in_buf(char *received_buf);
 
   size_t write_data(void *contents, size_t sz, size_t nmemb, void *ctx);
 
